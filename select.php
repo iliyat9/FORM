@@ -4,13 +4,12 @@ ini_set('display_errors', 1);
 
 // اتصال به دیتابیس
 $conn = new mysqli("localhost", "root", "", "beik");
-
 if ($conn->connect_error) {
     die("❌ خطا در اتصال به دیتابیس: " . $conn->connect_error);
 }
 
-// اجرای SELECT برای گرفتن داده‌ها
-$sql = "SELECT id, first_name, last_name, father_name, user_name, pas FROM saved ORDER BY id DESC";
+// گرفتن کاربران
+$sql = "SELECT id, first_name, last_name, father_name, user_name FROM saved ORDER BY id DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -27,20 +26,19 @@ body {
     font-family: 'Vazirmatn', Tahoma, sans-serif;
     margin: 0;
     padding: 50px;
-    color: #333;
+    color: #fff;
     text-align: center;
 }
 
 h2 {
-    color: #fff;
     margin-bottom: 25px;
 }
 
 .table-container {
-    background: #ffffff;
+    background: #222;
     border-radius: 12px;
     padding: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     width: 80%;
     max-width: 900px;
     margin: auto;
@@ -60,50 +58,25 @@ table {
 }
 
 th {
-    background-color: #2f6f85;
+    background-color: #4a7cff;
     color: #fff;
     padding: 12px;
     text-align: center;
 }
 
 td {
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #555;
     padding: 10px;
     text-align: center;
-    color: #333;
 }
 
-tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
+tr:nth-child(even) { background-color: #333; }
+tr:hover { background-color: #4a7cff33; transition:0.2s; }
 
-tr:hover {
-    background-color: #e3f2f9;
-    transition: 0.2s;
-}
+a { color:#fff; text-decoration:none; font-weight:700; }
+a:hover { text-decoration:underline; }
 
-.no-data {
-    color: #555;
-    padding: 20px;
-    font-weight: 600;
-}
-
-.back-link {
-    display: inline-block;
-    margin-top: 25px;
-    background: #2f6f85;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-.back-link:hover {
-    background: #3fa0c6;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(47,111,133,0.3);
-}
+.no-data { color: #ccc; padding: 20px; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -129,10 +102,10 @@ if ($result->num_rows > 0) {
         echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
         echo "<td>" . htmlspecialchars($row['last_name']) . "</td>";
         echo "<td>" . htmlspecialchars($row['father_name']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
+        // لینک به صفحه نمره گذاری با id
+        echo '<td><a href="enter_grade.php?id=' . $row['id'] . '">' . htmlspecialchars($row['user_name']) . '</a></td>';
         echo "</tr>";
     }
-
     echo "</table>";
 } else {
     echo "<div class='no-data'>هیچ کاربری ثبت نشده است ❌</div>";
@@ -140,8 +113,6 @@ if ($result->num_rows > 0) {
 $conn->close();
 ?>
 </div>
-
-<a href="login.php" class="back-link">بازگشت به صفحه ورود</a>
 
 </body>
 </html>
